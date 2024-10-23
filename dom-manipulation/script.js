@@ -18,7 +18,6 @@ const addQuoteDyn = `
 quoteDisplay.innerHTML += addQuoteDyn;
 
 function showRandomQuote(){
-    quoteDisplay.innerHTML += addQuoteDyn;
     const randomIndex = Math.floor(Math.random() * quotes.length);
     const quote = quotes[randomIndex];
     quoteDisplay.textContent = `${quote.text} - [${quote.category}]`;
@@ -26,6 +25,12 @@ function showRandomQuote(){
 };
 
 newQuoteBtn.addEventListener('click', showRandomQuote);
+
+function createAddQuoteForm(){
+    quoteDisplay.innerHTML += addQuoteDyn;
+}
+
+document.addEventListener('DOMContentLoaded', createAddQuoteForm);
 
 function addQuote(){
     if (newQuoteText ==='' || newQuoteCategory === ''){
