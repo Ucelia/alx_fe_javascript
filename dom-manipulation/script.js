@@ -15,6 +15,7 @@ const addQuoteDyn = `
         <button onclick="addQuote()">Add Quote</button>
       </div> 
 `;
+
 quoteDisplay.innerHTML += addQuoteDyn;
 
 function showRandomQuote(){
@@ -38,6 +39,9 @@ function addQuote(){
         return;
     }
     quotes.push({text: newQuoteText,category: newQuoteCategory});
+    const quoteList = document.createElement('li');
+    quoteList.textContent = quotes;
+    quoteDisplay.appendChild(quoteList);
     newQuoteText ==='';
     newQuoteCategory ==='';
 }
