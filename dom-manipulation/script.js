@@ -71,4 +71,17 @@ function importFromJsonFile(event) {
     fileReader.readAsText(event.target.files[0]);
   }
 
-const jsonString = JSON.stringify(quotes);
+function exportToJsonFile(){
+    const jsonString = JSON.stringify(quotes);
+    const blob = new Blob([jsonString], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const downloadLink = document.createElement('a');
+    downloadLink.href =url;
+    downloadLink.download = 'quotes.json';
+    downloadLink.click();
+
+    URL.revokeObjectURL(url);
+}
+
+
