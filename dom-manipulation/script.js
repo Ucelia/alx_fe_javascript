@@ -25,7 +25,7 @@ function createAddQuoteForm(){
         <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
         <button onclick="addQuote()">Add Quote</button>
       </div> 
-      <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
+      
 `;
     quoteDisplay.innerHTML += addQuoteDyn;
 }
@@ -34,10 +34,6 @@ function createAddQuoteForm(){
 function addQuote(){
     const newQuoteText = document.getElementById('newQuoteText').value.trim();
     const newQuoteCategory = document.getElementById('newQuoteCategory').value.trim();
-    // const importFromJsonBtn = `
-    // <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
-    // `;
-    // quoteDisplay.innerHTML += importFromJsonBtn;
 
     if (newQuoteText ==='' || newQuoteCategory === ''){
         alert ('Fill in all the fields')
@@ -51,7 +47,6 @@ function addQuote(){
     
     saveQuotes();
 
-    //localStorage.setItem();
     newQuoteText ='';
     newQuoteCategory ='';
 }
