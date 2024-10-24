@@ -57,9 +57,7 @@ function addQuote(){
 }
 
 function saveQuotes(quotes) {
-        const storedQuotes = JSON.parse(localStorage.getItem('quotes') || '[]');
-        storedQuotes.push(quotes);
-        localStorage.setItem('quotes', JSON.stringify(storedQuotes));
+        localStorage.setItem('quotes', JSON.stringify(quotes));
     }
 
 function importFromJsonFile(event) {
