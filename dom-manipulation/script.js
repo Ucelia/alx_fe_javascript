@@ -1,4 +1,11 @@
-document.addEventListener('DOMContentLoaded', createAddQuoteForm);
+document.addEventListener('DOMContentLoaded', function(){
+    createAddQuoteForm();
+    populateCategories();
+    filterQuotes();
+    const lastSelectedCategory = localStorage.getItem('categoryFilter');
+    categoryFilter.value= lastSelectedCategory;
+    filterQuotes();
+});
 
 let quotes = JSON.parse(localStorage.getItem('quotes')) || [
     {text:"The way to get started is to quit talking and begin doing.", category:"Motivational Quotes"},
@@ -8,6 +15,7 @@ let quotes = JSON.parse(localStorage.getItem('quotes')) || [
 ]
 const newQuoteBtn = document.getElementById('newQuote');
 const quoteDisplay = document.getElementById('quoteDisplay');
+let categoryFilter = document.getElementById('categoryFilter');
 
 function showRandomQuote(){
     const randomIndex = Math.floor(Math.random() * quotes.length);
@@ -49,6 +57,7 @@ function addQuote(){
 
     newQuoteText ='';
     newQuoteCategory ='';
+    
 }
 
 function saveQuotes(quotes) {
@@ -77,6 +86,44 @@ function exportToJsonFile(){
     downloadLink.click();
 
     URL.revokeObjectURL(url);
+
+}
+
+function populateCategories(){
+    const uniqueCategory = quotes.category;
+    uniqueCategory.forEach(category => {
+        let option = document.createElement('option');
+        option.textContent= category;
+        option.value = category;
+        categoryFilter.appendChild('option');
+    });
+}
+
+function filterQuotes(){
+    const selectedCategory = categoryFilter.value;
+    localStorage.setItem('categoryFilter', SelectedCategory);
+    quoteDisplay.innerHTML ='';
+    function filteredQuotes ()  {
+    if (selectedCategory === 'All Categories'){
+        return quotes;
+    }
+    else {
+        return quotes.filter(function(quote) {
+            return quote.category === SelectedCategory;
+        });
+    }
+}
+filteredQuotes.forEach(quote => {
+    const quoteListItem = document.createElement('li');
+    quoteListItem.textContent = `${quote.text} - [${quote.category}]`;
+    quoteDisplay.appendChild(quoteListItem);
+})
+    
+}
+filterQuotes();
+
+function saveLastCategory (){
+    localStorage.setItem('categoryFilter', JSON.stringify(categoryFilter));
 }
 
 
