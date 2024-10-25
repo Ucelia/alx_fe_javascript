@@ -1,10 +1,7 @@
 document.addEventListener('DOMContentLoaded', function(){
     createAddQuoteForm();
     populateCategories();
-    filterQuotes();
-    const lastSelectedCategory = localStorage.getItem('categoryFilter');
-    categoryFilter.value= lastSelectedCategory;
-    filterQuotes();
+    syncQuotes();
 });
 
 let quotes = JSON.parse(localStorage.getItem('quotes')) || [
@@ -90,7 +87,8 @@ function exportToJsonFile(){
 }
 
 function populateCategories(){
-    const uniqueCategories = [...new Set(quotes.map(quote => quote.category))];    uniqueCategory.forEach(category => {
+    const uniqueCategories = [...new Set(quotes.map(quote => quote.category))];    
+    uniqueCategories.forEach(category => {
         let option = document.createElement('option');
         option.textContent= category;
         option.value = category;
@@ -125,13 +123,23 @@ function saveLastCategory (){
     localStorage.setItem('categoryFilter', JSON.stringify(categoryFilter));
 }
 
-async function fetchQuotesFromServer(params) {
+async function fetchQuotesFromServer(quote) {
     try {
-        const response = await fetch('https://jsonplaceholder.typicode.com/posts');
-        const serverQuotes = await response.json();
-        return serverQuotes.map(post => ({
-            text: post.title, category: 'Server Category'
-        }));
+        const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            },
+            body: JSON.stringify(quote)
+        });
+
+        if (response.ok){
+            const result = await response.json();
+            console.log("Quote successfully sent to server:", result);
+        } else {
+            console.log("Failed to send quote to server:", response.status);
+        }
+        
     }catch (error) {
         console.error('Erreor fetching quotes from server', error);
     }
