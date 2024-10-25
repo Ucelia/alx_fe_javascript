@@ -125,4 +125,59 @@ function saveLastCategory (){
     localStorage.setItem('categoryFilter', JSON.stringify(categoryFilter));
 }
 
+async function fetchQuotesFromServer(params) {
+    try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+        const serverQuotes = await response.json();
+        return serverQuotes.map(post => ({
+            text: post.title, category: 'Server Category'
+        }));
+    }catch (error) {
+        console.error('Erreor fetching quotes from server', error);
+    }
+}
+
+async function syncQuotes (){
+    const serverQuotes = await fetchQuotesFromServer();
+    if (serverQuotes){
+        const localQuotes = JSON.parse(localStorage(setItem('quotes')));
+
+        resolveConflicts(serverQuotes, localQuotes);
+
+        const mergeQuotes = (serverQuotes, localQuotes) =>{
+            const mergedQuotes = [];
+            serverQuotes.forEach(serverQuote => {
+                mergedQuotes.push(serverQuote);
+            });
+
+            localQuotes.forEach(localQuote =>{
+                const existsInServer = serverQuotes.some(serverQuote =>serverQuote.text === localQuote.text);
+                if(!existsInServer){
+                    mergedQuotes.push(localQuote);
+                }
+            });
+            return mergedQuotes;
+        }
+        const mergedQuotes = mergeQuotes(serverQuotes, localQuotes);
+        localStorage.setItem('quotes', JSON.stringify(mergedQuotes));
+        quotes = mergedQuotes;
+        populateCategories();
+        alert('Quotes synced with server!');
+    }
+}
+
+function resolveConflicts (serverQuotes, localQuotes){
+    let conflicts = [];
+    serverQuotes.forEach(serverQuote => {
+        const matchingQuotes = localQuotes.find(localQuote => localQuote.text === serverQuote.text);
+        if (matchingQuotes && matchingQuotes.category !== serverQuote.category){
+            conflicts.push({local: matchingQuotes, server: serverQuote});
+        }
+    });
+    if(conflicts.length >0){
+        conflicts.forEach(conflict => {
+            alert(`Conflict detected! Server quote:"${conflict.server.text}" will overwrite local changes`);
+        });
+    }
+}
 
