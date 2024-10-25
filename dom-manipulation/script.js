@@ -188,4 +188,4 @@ function resolveConflicts (serverQuotes, localQuotes){
         });
     }
 }
-
+setInterval(syncQuotes, 60000);
