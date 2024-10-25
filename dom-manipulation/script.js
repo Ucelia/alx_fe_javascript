@@ -90,8 +90,7 @@ function exportToJsonFile(){
 }
 
 function populateCategories(){
-    const uniqueCategory = quotes.category;
-    uniqueCategory.forEach(category => {
+    const uniqueCategories = [...new Set(quotes.map(quote => quote.category))];    uniqueCategory.forEach(category => {
         let option = document.createElement('option');
         option.textContent= category;
         option.value = category;
